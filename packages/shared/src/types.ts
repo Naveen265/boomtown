@@ -45,6 +45,9 @@ export interface BaseTile {
   id: number;
   type: TileType;
   name: string;
+  /** Optional curated short label for the board when `name` can't fit a tile.
+   *  The full `name` is always shown in the tile detail modal. */
+  shortName?: string;
 }
 
 export interface PropertyTile extends BaseTile {

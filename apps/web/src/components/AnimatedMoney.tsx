@@ -27,7 +27,7 @@ export default function AnimatedMoney({ value, className }: { value: number; cla
   }, [value]);
 
   return (
-    <span className={className}>
+    <span className={className} style={{ fontVariantNumeric: 'tabular-nums' }}>
       {CURRENCY_SYMBOL}
       {display.toLocaleString()}
     </span>

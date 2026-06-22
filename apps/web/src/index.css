@@ -30,7 +30,8 @@ body {
 @layer components {
   .btn {
     @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold
-      transition-transform duration-100 active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100 select-none;
+      transition-transform duration-100 active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100 select-none
+      outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-ink-900;
   }
   .btn-primary {
     @apply btn bg-ember-500 text-ink-900 shadow-tile hover:bg-ember-400;
@@ -51,6 +52,39 @@ body {
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
+}
+
+/* ── tile labels (§1) ──────────────────────────────────────────────────────
+   Every board tile is a size container, so labels scale with the tile via cq
+   units and fit at any board size without truncation or mid-word breaks. */
+.tile-cell {
+  container-type: size;
+}
+.tile-label {
+  font-weight: 600;
+  color: theme('colors.sand.200');
+  text-align: center;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+  word-break: keep-all; /* never split a word mid-character */
+  overflow-wrap: normal;
+  hyphens: none;
+  text-wrap: balance; /* even, ≤2-line wrapping */
+  max-width: 100%;
+  max-height: 100%;
+}
+/* horizontal labels: top/bottom + corners */
+.tile-label--h {
+  display: block;
+  font-size: clamp(4px, 15.5cqmin, 11px);
+}
+/* vertical labels: left/right side columns, rotated 90° to gain length room */
+.tile-label--v {
+  writing-mode: vertical-rl;
+  font-size: clamp(4px, 15.5cqmin, 11px);
+}
+.tile-label--v[data-edge='left'] {
+  transform: rotate(180deg); /* read bottom-to-top on the left edge */
 }
 
 /* hide scrollbars but keep scrolling */

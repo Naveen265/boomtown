@@ -3,7 +3,11 @@ import {
   type Tile,
   type GameState,
   type Player,
+  type OwnableTile,
   GROUP_COLORS,
+  GROUP_ORDER,
+  isOwnable,
+  ownsWholeGroup,
 } from '@boomtown/shared';
 
 export function money(n: number): string {
@@ -40,6 +44,17 @@ export function tileCell(id: number): Cell {
 export function tileCenter(id: number): { x: number; y: number } {
   const { row, col } = tileCell(id);
   return { x: (col + 0.5) / 11, y: (row + 0.5) / 11 };
+}
+
+/** how many properties + complete color groups a player holds (for player cards) */
+export function holdings(state: GameState, playerId: string): { properties: number; monopolies: number } {
+  let properties = 0;
+  for (const t of state.tiles) {
+    if (isOwnable(t) && (t as OwnableTile).ownerId === playerId) properties++;
+  }
+  let monopolies = 0;
+  for (const g of GROUP_ORDER) if (ownsWholeGroup(state, playerId, g)) monopolies++;
+  return { properties, monopolies };
 }
 
 /** small fan-out offset so multiple tokens on one tile don't fully overlap */

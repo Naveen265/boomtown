@@ -57,6 +57,19 @@ const utilityNames: Record<number, string> = {
   28: 'Spark Co.',
 };
 
+// Curated short labels for the board, for names that can't sit comfortably on a
+// small tile. The full `name` is always used in the tile detail modal.
+const SHORT_NAMES: Record<string, string> = {
+  "Brickmaker's Walk": 'Brickmkr Walk',
+  'Glass Tower Plaza': 'Glass Tower',
+  'Reservoir Authority': 'Reservoir',
+  'Off to the Cell': 'To the Cell',
+  'Coppersmith Bend': 'Copper Bend',
+  'Observatory Row': 'Observ. Row',
+  "Ferryman's Reach": 'Ferryman Reach',
+  'Millwright Way': 'Mill Way',
+};
+
 export function createBoard(): Tile[] {
   const propById = new Map(props.map((p) => [p.id, p]));
   const tiles: Tile[] = [];
@@ -119,6 +132,9 @@ export function createBoard(): Tile[] {
         mortgaged: false,
       });
     }
+  }
+  for (const t of tiles) {
+    if (SHORT_NAMES[t.name]) t.shortName = SHORT_NAMES[t.name];
   }
   return tiles;
 }
