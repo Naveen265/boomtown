@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: theme('fontFamily.body');
+  background:
+    radial-gradient(1200px 800px at 50% -10%, #2a211a 0%, #16110d 55%, #100c09 100%);
+  color: theme('colors.sand.100');
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+.font-display {
+  font-family: theme('fontFamily.display');
+  letter-spacing: -0.01em;
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 font-semibold
+      transition-transform duration-100 active:scale-[0.97] disabled:opacity-40 disabled:active:scale-100 select-none;
+  }
+  .btn-primary {
+    @apply btn bg-ember-500 text-ink-900 shadow-tile hover:bg-ember-400;
+  }
+  .btn-teal {
+    @apply btn bg-teal-500 text-ink-900 shadow-tile hover:bg-teal-400;
+  }
+  .btn-ghost {
+    @apply btn bg-ink-600 text-sand-100 hover:bg-ink-500;
+  }
+  .card {
+    @apply rounded-xl2 bg-ink-700/90 border border-white/5 shadow-tile backdrop-blur;
+  }
+  .input {
+    @apply w-full rounded-xl bg-ink-800 border border-white/10 px-4 py-3 text-sand-100
+      placeholder:text-sand-300/40 outline-none focus:border-ember-500 transition-colors;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
+  }
+}
+
+/* hide scrollbars but keep scrolling */
+.scroll-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scroll-thin::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+}
