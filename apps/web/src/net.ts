@@ -107,9 +107,17 @@ export const useGame = create<Store>((set, get) => {
 
     createRoom: (name, tokenId) =>
       new Promise((resolve) => {
+        if (!get().connected) {
+          set({ error: { code: 'OFFLINE', message: 'Can’t reach the game server. Is it running?' } });
+          return resolve(null);
+        }
         set({ joining: true });
-        socket.emit('createRoom', { name, tokenId }, (res: any) => {
+        socket.timeout(8000).emit('createRoom', { name, tokenId }, (err: unknown, res: any) => {
           set({ joining: false });
+          if (err || !res) {
+            set({ error: { code: 'TIMEOUT', message: 'Server didn’t respond. Check your connection and try again.' } });
+            return resolve(null);
+          }
           if (res.ok) {
             set({ joined: true, selfId: res.playerId, roomCode: res.roomCode });
             saveSession({ roomCode: res.roomCode, sessionToken: res.sessionToken, name, tokenId });
@@ -123,9 +131,17 @@ export const useGame = create<Store>((set, get) => {
 
     joinRoom: (roomCode, name, tokenId) =>
       new Promise((resolve) => {
+        if (!get().connected) {
+          set({ error: { code: 'OFFLINE', message: 'Can’t reach the game server. Is it running?' } });
+          return resolve(false);
+        }
         set({ joining: true });
-        socket.emit('joinRoom', { roomCode: roomCode.toUpperCase(), name, tokenId }, (res: any) => {
+        socket.timeout(8000).emit('joinRoom', { roomCode: roomCode.toUpperCase(), name, tokenId }, (err: unknown, res: any) => {
           set({ joining: false });
+          if (err || !res) {
+            set({ error: { code: 'TIMEOUT', message: 'Server didn’t respond. Check your connection and try again.' } });
+            return resolve(false);
+          }
           if (res.ok) {
             set({ joined: true, selfId: res.playerId, roomCode: res.roomCode });
             saveSession({ roomCode: res.roomCode, sessionToken: res.sessionToken, name, tokenId });

@@ -12,6 +12,7 @@ export default function Home() {
   const createRoom = useGame((s) => s.createRoom);
   const joinRoom = useGame((s) => s.joinRoom);
   const joining = useGame((s) => s.joining);
+  const connected = useGame((s) => s.connected);
 
   const remember = () => localStorage.setItem('boomtown.name', name.trim());
   const nameOk = name.trim().length > 0;
@@ -69,15 +70,15 @@ export default function Home() {
           <div className="space-y-2.5 pt-1">
             <button
               className="btn-primary w-full py-3 text-base"
-              disabled={!nameOk || joining}
+              disabled={!nameOk || joining || !connected}
               onClick={() => {
                 remember();
                 createRoom(name.trim(), token);
               }}
             >
-              Create a game
+              {joining ? 'Creating…' : 'Create a game'}
             </button>
-            <button className="btn-ghost w-full py-3 text-base" onClick={() => setMode('join')}>
+            <button className="btn-ghost w-full py-3 text-base" disabled={joining} onClick={() => setMode('join')}>
               Join with a code
             </button>
           </div>
@@ -92,13 +93,13 @@ export default function Home() {
             />
             <button
               className="btn-teal w-full py-3 text-base"
-              disabled={!nameOk || code.length !== 5 || joining}
+              disabled={!nameOk || code.length !== 5 || joining || !connected}
               onClick={() => {
                 remember();
                 joinRoom(code, name.trim(), token);
               }}
             >
-              Join game
+              {joining ? 'Joining…' : 'Join game'}
             </button>
             <button className="btn-ghost w-full py-2 text-sm" onClick={() => setMode('menu')}>
               Back
@@ -107,9 +108,13 @@ export default function Home() {
         )}
       </div>
 
-      <p className="mt-auto pt-8 text-center text-xs text-sand-300/40">
-        2–6 players · share your room code to invite friends
-      </p>
+      <div className="mt-auto pt-8 text-center text-xs">
+        <div className={`mb-1 inline-flex items-center gap-1.5 ${connected ? 'text-teal-400' : 'text-amber-400'}`}>
+          <span className={`h-1.5 w-1.5 rounded-full ${connected ? 'bg-teal-400' : 'bg-amber-400 animate-pulse'}`} />
+          {connected ? 'Connected to game server' : 'Connecting to game server…'}
+        </div>
+        <div className="text-sand-300/40">2–6 players · share your room code to invite friends</div>
+      </div>
     </div>
   );
 }
